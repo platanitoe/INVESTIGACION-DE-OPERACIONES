@@ -1,0 +1,27 @@
+import pulp
+
+# Crear modelo
+modelo = pulp.LpProblem("Edge_Computing", pulp.LpMaximize)
+
+# Variables enteras
+x1 = pulp.LpVariable("Blade_Estandar", lowBound=0, cat='Integer')
+x2 = pulp.LpVariable("Rack_Pro", lowBound=2, cat='Integer')
+
+# Función objetivo
+modelo += 10000*x1 + 25000*x2
+
+# Restricciones
+modelo += 1500*x1 + 4000*x2 <= 30000
+modelo += x1 + 3*x2 <= 24
+modelo += 2*x1 + 5*x2 <= 45
+
+# Resolver
+modelo.solve()
+
+# Resultados
+print("Estado:", pulp.LpStatus[modelo.status])
+
+print("Blade Estándar:", x1.varValue)
+print("Rack Pro:", x2.varValue)
+
+print("EPS Máximo:", pulp.value(modelo.objective))
